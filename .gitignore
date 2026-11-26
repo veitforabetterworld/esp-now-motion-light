@@ -1,0 +1,17 @@
+# KiCad: lokale Dateien
+*.lck
+*.kicad_prl
+.history/
+*-backups/
+fp-info-cache
+_autosave-*
+
+# Alte Platinenstände und fremde 3D-Modelle (nur lokal)
+hardware/archiv/
+hardware/lib/3d/
+
+# Python
+__pycache__/
+
+# Zugangsdaten nie einchecken
+Secrets.h
