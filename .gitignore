@@ -6,10 +6,6 @@
 fp-info-cache
 _autosave-*
 
-# Alte Platinenstände und fremde 3D-Modelle (nur lokal)
-hardware/archiv/
-hardware/lib/3d/
-
 # Python
 __pycache__/
 
