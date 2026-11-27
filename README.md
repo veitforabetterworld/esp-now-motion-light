@@ -45,7 +45,7 @@ in einem 3D-gedruckten, **spritzwassergeschützten Gehäuse**. Pro Board: 1 Bewe
 | 1 | Wemos D1 mini (ESP8266) | auf **2 × 8-polige Buchsenleisten 8,5 mm** stecken |
 | 1 | HC-SR501 | Jumper auf **H** (wiederauslösend), Zeit-Poti auf Minimum |
 | 1 | L7805 (TO-220) | stehend |
-| 1 | IRLB8721PBF (TO-220) | Logic-Level-MOSFET, stehend |
+| 1 | IRLB8721PBF (TO-220) | Logic-Level-MOSFET, stehend. Alternative: IRLB4132PBF (gleiche Pinbelegung und Bauhöhe). Kein Standard-MOSFET wie STP16NF06 oder IRF1404: die schalten mit 3,3 V am Gate nicht sicher durch |
 | 1 | 1N4007 | Verpolschutz |
 | 1 | Widerstand 220 Ω, 1/4 W | R1 |
 | 1 | Widerstand 10 kΩ, 1/4 W | R2 |
