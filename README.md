@@ -51,11 +51,12 @@ in einem 3D-gedruckten, **spritzwassergeschützten Gehäuse**. Pro Board: 1 Bewe
 | 1 | 1 µF Keramik, RM 2,5 | |
 | 1 | 10 µF / 16 V Elko, Ø 5 mm, **max. 6 mm hoch** (z. B. 5 × 5) | sitzt **unter** dem D1 mini |
 | 2 | Schraubklemme 2-polig, RM 5,08 | |
-| 1 | Taster 6 × 6 × 5 mm, 4 Pins | Höhe 5 mm (Stößel ist darauf abgestimmt) |
-| 9 | Einschmelzmutter M3 (z. B. M3 × 5,7, Bohrung 4,0 mm) | 4 Deckel, 3 Platine, 2 Tastenhalter |
-| 4 | Senkkopfschraube M3 × 10 (DIN 7991) | Deckel, bündig |
+| 1 | Taster 6 × 6 × 5 mm, 4 Pins | Höhe 5 mm (Tastenstift ist darauf abgestimmt) |
+| 11 | Einschmelzmutter M3 (z. B. M3 × 5,7, Bohrung 4,0 mm) | 4 Bodendeckel, 4 Klemmendeckel, 3 Platine |
+| 4 | Senkkopfschraube M3 × 10 (DIN 7991) | Bodendeckel, bündig |
+| 4 | Senkkopfschraube M3 × 8 (DIN 7991) | Klemmendeckel, bündig |
 | 3 | Zylinderschraube M3 × 6 | Platine |
-| 2 | Schneidschraube M2 × 6 (für Kunststoff) | PIR an den Deckel |`n| 2 | Zylinderschraube M3 × 6 | Tastenhalter |
+| 2 | Schneidschraube M2 × 6 (für Kunststoff) | PIR an die Front |
 | 2 | Kabelverschraubung M12 × 1,5 | Kabel 3–6,5 mm |
 
 ## Platine bestellen (JLCPCB)
@@ -84,44 +85,67 @@ Befestigungslöcher (Platinenkoordinaten, Ursprung oben links): H1 (4,07 / 41,39
 Der Schaltplan (`Funklicht_Schaltplan.pdf`) ist durchgehend verdrahtet: Versorgung links, D1 mini in der Mitte,
 Lampenschaltung rechts, +12V-Schiene oben, GND-Schiene unten.
 
-## Gehäuse (v1.3)
+## Gehäuse (v2.0)
 
-Außen ca. 42 × 80 × 42 mm. Die drei Platinendome (Ø 6,5 mm) sitzen unter den Befestigungslöchern und berühren
-keine Lötstelle (geprüft). **Zweiteiliger Deckel:**
+Außen ca. 42 × 81,5 × 43 mm (ohne Wandlaschen). **Öffnung nach hinten zur Wand:**
 
-- **Hinterer Deckel** (PIR + Taster): mit 4 M3-Senkkopfschrauben bündig verschraubt und rundum gedichtet.
-  Die Dichtung läuft über die Seitenwände, oben und über einen **Quersteg** direkt hinter den Schraubklemmen.
-  So ist der Elektronikraum vom Klemmenraum getrennt.
-- **Klemmenabdeckung**: wird nur **eingeklipst** (2 Schnapphaken, die in Nischen der Seitenwände rasten).
-  An der Unterkante hat sie eine Griffmulde zum Abhebeln. Darunter liegen die Klemmenschrauben frei; ein Schraubendreher
-  (Ø 3 mm) kommt senkrecht an alle vier Schrauben (geprüft). Der Klemmenraum ist nicht gedichtet, hat aber unten ein
-  Ablaufloch. Wasser, das hier eindringt, läuft nach unten ab und nicht in den Elektronikraum.
-- **PIR**: wird mit seinen **2 Befestigungslöchern** (Ø 2 mm, Abstand 28 mm, am Bauteil gemessen) direkt an zwei Dome im
-  Deckel geschraubt (M2 × 6, Kunststoff-Schneidschraube / Blechschraube 2,2 mm). Die Linsendichtung liegt dazwischen.
-- **Taster** bei geschlossenem Gehäuse (nachgiebiger Mechanismus):
-  - Die TPU-Tastenkappe hat eine **Faltenmembran**, die als Gelenk dient. Die Falte macht die Membran deutlich weicher als eine flache Membran.
-  - Ihr Flansch wird vom Tastenhalter in eine Tasche im Deckel gepresst und dichtet so den Durchbruch ab.
-  - Der Knopf (Ø 5 mm, Ring auf dem Deckel markiert die Stelle) schiebt einen geführten PETG-Stößel auf den Taster (0,3 mm Luft).
+- **Gehäuse** (Haube): Seitenwände und Front aus einem Stück. In der Front sitzen das PIR-Fenster und der Taster.
+  Hinten ist das Gehäuse über den vollen Innenquerschnitt (34 × 73,5 mm) offen. Die Platine passt in Einbaulage gerade
+  hindurch (geprüft, auch mit L7805/MOSFET).
+- **Bodendeckel** (Wandseite): trägt die Platine auf drei Domen (Ø 6,5 mm, berühren keine Lötstelle) und die beiden
+  Wandlaschen. Die Laschen haben gerundete Ecken und je ein Langloch (Ø 4,8 mm, 3 mm Verschiebeweg), um 45° gedreht und
+  oben/unten spiegelbildlich (`/` und `\`). Zusammen gleichen die beiden Langlöcher ungenau gebohrte Wandlöcher in jeder Richtung aus.
+  Der Bodendeckel wird mit 4 M3-Senkkopfschrauben von hinten bündig an das Gehäuse geschraubt. Die Schrauben greifen in
+  Einschmelzmuttern in den vier Eckblöcken am hinteren Rand. Die Eckblöcke liegen außerhalb des Platinenumrisses.
+- **Dichtung**: TPU-Schnur in einer Nut im hinteren Gehäuserand, innerhalb der Schrauben, rundum geschlossen.
+  Die Dichtfläche liegt an der geschützten Wandseite, nicht mehr an der Front. Ein Zentrierkragen am Bodendeckel führt
+  ihn ins Gehäuse.
+- **PIR** (HC-SR501, Platine 32 × 24 mm): sitzt mittig auf der Front hinter dem Klemmendeckel. Er wird mit seinen
+  **2 Befestigungslöchern** (Ø 2 mm, Abstand 28 mm, am Bauteil gemessen) von innen an zwei kurze Dome in der Front
+  geschraubt (M2 × 6, Kunststoff-Schneidschraube / Blechschraube 2,2 mm). Die Löcher in den Domen (Ø 1,7 mm) sind
+  Sacklöcher und von außen nicht sichtbar. Die Linsendichtung liegt zwischen Linsenplatte und Front.
+- **Taster** bei geschlossenem Gehäuse: nur zwei Teile, die Front mit Führungsrohr und ein Tastenstift.
+  - Das Loch in der Front ist als **Rohr** (außen Ø 7,6 mm, Bohrung Ø 4,4 mm) bis 1 mm über den Stiftkopf nach innen
+    verlängert, rund 21 mm lange Führung.
+  - Der **Tastenstift** (Ø 4 mm) hat unten einen Kopf (Ø 6,5 mm), der auf dem Taster aufliegt. Er steht in Ruhe 1 mm aus
+    der Front; der Ring auf der Front markiert die Stelle. Der Kopf verhindert, dass der Stift nach außen herausfällt.
+  - Die Stiftdurchführung ist **nicht gedichtet** (0,2 mm Spiel rundum). Bei senkrechter Front und waagrechtem Rohr
+    kommt kaum Wasser hinein, ganz dicht wie die Deckel ist sie aber nicht.
+- **Kabelverschraubungen** (2 × M12 × 1,5) in der unteren Stirnseite, 16 mm über der Dichtfläche und damit nahe an den
+  Klemmeneingängen. Zwischen den Kontermuttern innen und den Klemmen bleiben knapp 4 mm, kein Leerraum mehr. Die
+  Kontermuttern (SW 15) mit einer Schlüsselfläche zur Seitenwand drehen; so sind sie frei (geprüft, `kollision_kontermutter`).
+- **Klemmendeckel** vorne über den Schraubklemmen: kleiner Schraubdeckel mit 4 M3-Senkkopfschrauben (bündig) und
+  eigener TPU-Dichtung. Ein **Quersteg** direkt hinter den Klemmen trennt den Klemmenraum vorne ab und trägt die Dichtung.
+  Bei abgenommenem Deckel kommt ein Schraubendreher (Ø 3 mm) senkrecht an alle vier Klemmenschrauben (geprüft).
+  Kabel lassen sich so anschließen, ohne das Gehäuse von der Wand zu nehmen. Weil auch dieser Deckel gedichtet ist,
+  ist der ganze Innenraum dicht.
+
+Kollisionsprüfungen in der SCAD-Datei (`part` = `kollision`, `kollision_taster`, `kollision_bodendeckel`,
+`kollision_klemmdeckel`, `kollision_schraubendreher`, `kollision_kontermutter`, `kollision_einbau`) liefern nur Flächenkontakte bzw. ein leeres
+Objekt. `kollision_einbau` prüft, dass die bestückte Platine von hinten bis in ihre Endlage geschoben werden kann.
 
 | Teil (`gehaeuse/stl/`) | Material | Druck |
 |---|---|---|
-| `unterteil.stl` | PETG | Rückseite aufs Bett, ohne Stützen (Quersteg = 34-mm-Brücke) |
-| `deckel.stl` | PETG | Außenseite aufs Bett (schon gedreht) |
+| `gehaeuse.stl` | PETG | Front aufs Bett (schon gedreht), ohne Stützen (Eckblöcke mit 45°-Fase) |
+| `bodendeckel.stl` | PETG | Wandseite aufs Bett |
 | `klemmdeckel.stl` | PETG | Außenseite aufs Bett (schon gedreht) |
-| `tastenhalter.stl` | PETG | Platte aufs Bett |
-| `stoessel.stl` | PETG | Kopf nach unten (schon gedreht) |
+| `tastenstift.stl` | PETG | Kopf aufs Bett |
 | `regenschutz.stl` (optional) | PETG | flach, über die Linse kleben |
-| `dichtung.stl` | TPU 95A | flach, 100 % Infill |
+| `dichtung.stl` | TPU 95A | flach, 100 % Infill (Bodendeckel) |
+| `klemmdichtung.stl` | TPU 95A | flach, 100 % Infill (Klemmendeckel, gleiche Schnur 1,8 mm) |
 | `linsendichtung.stl` | TPU 95A | flach |
-| `tastenkappe.stl` | TPU 95A | Flansch aufs Bett, 100 % Infill, langsam drucken |
 
 **Montage**:
-1. Einschmelzmuttern M3 mit dem Lötkolben setzen: 4 Deckelschrauben im Unterteil, 3 Platinendome, 2 Dome für den Tastenhalter im Deckel.
-2. Platine festschrauben, dann den D1 mini aufstecken.
-3. Dichtung in die Nut legen.
-4. PIR mit Linsendichtung auf die Dome schrauben. Tastenkappe in die Tasche legen, Stößel durch den Halter stecken, Halter festschrauben.
-5. Den hinteren Deckel aufschrauben. Kabel durch die Verschraubungen führen, anklemmen, Abdeckung einklipsen.
-6. Das Gehäuse **mit den Kabelverschraubungen nach unten** montieren.
+1. Einschmelzmuttern M3 mit dem Lötkolben setzen: 4 im hinteren Gehäuserand, 4 für den Klemmendeckel,
+   3 in den Platinendomen des Bodendeckels.
+2. Von hinten ins Gehäuse: PIR mit Linsendichtung auf die Dome schrauben. Gehäuse mit der Front nach unten legen und
+   den Tastenstift (Spitze voran) ins Rohr stecken.
+3. Platine auf den Bodendeckel schrauben, dann den D1 mini aufstecken.
+4. Dichtung in die hintere Nut legen, Bodendeckel einsetzen und mit 4 M3 × 10 Senkkopfschrauben von hinten verschrauben.
+5. Das Gehäuse **mit den Kabelverschraubungen nach unten** über die Laschen des Bodendeckels an die Wand schrauben.
+6. Kabel durch die Verschraubungen führen und durch die vordere Öffnung anklemmen. Klemmdichtung in die Nut legen und
+   den Klemmendeckel mit 4 M3 × 8 Senkkopfschrauben aufschrauben.
+
 ## Firmware (ESP-NOW)
 
 `firmware/Funklicht/Funklicht.ino` ist eine Firmware für alle Lampen. Board: **LOLIN(WEMOS) D1 R2 & mini**.
