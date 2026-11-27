@@ -23,6 +23,9 @@ H = tb + id;                     // Innenseite der Front bei Z = H, Dichtflaeche
 ins_d = 4.0; ins_l = 6.4;        // Einschmelzmutter M3 (z. B. M3 x 5,7, Aussen-D 4,6)
 gw = 2.0; gd = 2.0; g_in = 0.8;  // Dichtungsnut (beginnt 0,8 mm hinter der Innenkante)
 sw = 1.8; sh = 2.6;              // TPU-Dichtschnur (0,6 mm Verpressung)
+g_round = 4.3;                   // Innenecken der Dichtbereiche gerundet -> Nut ohne Knick (Mittellinie R 2,5)
+g_fillet = 1.5;                  // Aussenecken der Oeffnungen (Block an Wand/Steg) gerundet, Kante parallel zur Nut
+k_round = 3.3;                   // Klemmendeckel: kleiner, Schrauben an den Stegenden sitzen naeher (Mittellinie R 1,5)
 
 // ---------------- Platine (aus KiCad) ----------------
 pcb_w = 28.46; pcb_h = 57.0; pcb_t = 1.6;
@@ -49,6 +52,7 @@ beam_z0 = term_top + 1.0;        // Unterkante Steg (ueber den Klemmen)
 shoulder_z0 = pcb_z + pcb_t + 20 + 0.6;   // Verstaerkung unter der Frontkante: 0,6 mm ueber L7805/MOSFET
 shoulder_w = 3.0;                // so weit reicht sie unter die Front
 kcb = 6;  kblk_z0 = 33.0;        // Schraubbloecke an der Front (Einschmelzmutter 6,4 tief), frei ueber den Klemmen
+kcb_l = [kcb, kcb + 1];          // Laenge in y: unten 6, an den Stegenden 7 (1,2 mm Material zwischen Nut und Schraubloch)
 klemm_pts = [[0, 0], [iw, 0], [0, beam_y0 - 1], [iw, beam_y0 - 1]];
 kgw = gw; k_in = g_in; ksw = sw; ksh = sh;      // gleiche Dichtschnur wie am Bodendeckel
 y_split = beam_y0 + k_in + kgw + 0.8;            // Stoss Klemmendeckel / Front (0,5 mm Ueberdeckung hinter der Nut)
@@ -85,26 +89,37 @@ pin_len = H + tl + pin_proj - sw_top;            // Gesamtlaenge Stift inkl. Kop
 module rr(w, h, r) { translate([r, r]) offset(r = r) square([w - 2 * r, h - 2 * r]); }
 module outer2d() { translate([-t, -t]) rr(iw + 2 * t, ih + 2 * t, ro); }
 // Gedichteter Innenraum = Innenquerschnitt ohne die Eckbloecke
+// Dichtbereiche = Oeffnung minus Kreise um die Schraubloecher: Nut und Oeffnungskante laufen
+// konzentrisch um jedes Loch (Nut bei Radius rb - 2,8 .. rb - 0,8, also 1,2 mm Material zum Einschmelzloch)
+rb = 6;
 module seal_region2d() {
     difference() {
         square([iw, ih]);
-        for (x = [0, iw - cb], y = [0, ih - cb]) translate([x, y]) square(cb);
+        for (p = deck_pts) translate(p) circle(r = rb);
     }
 }
+// Oeffnung mit gerundeten Ecken: um die Schraubbloecke R gr, an Wand/Steg R g_fillet
+module rund2d(gr) { offset(r = g_fillet) offset(delta = -g_fillet) offset(r = -gr) offset(delta = gr) children(); }
 module groove2d(w) {
     c = g_in + gw / 2;
-    difference() { offset(r = c + w / 2) seal_region2d(); offset(r = c - w / 2) seal_region2d(); }
+    difference() {
+        offset(r = c + w / 2) rund2d(g_round) seal_region2d();
+        offset(r = c - w / 2) rund2d(g_round) seal_region2d();
+    }
 }
 // Klemmenraum: Oeffnung in der Front ohne die vier Schraubbloecke
 module klemm_region2d() {
     difference() {
         square([iw, beam_y0]);
-        for (x = [0, iw - kcb], y = [0, beam_y0 - kcb]) translate([x, y]) square(kcb);
+        for (p = klemm_pts) translate(p) circle(r = rb);
     }
 }
 module kgroove2d(w) {
     c = k_in + kgw / 2;
-    difference() { offset(r = c + w / 2) klemm_region2d(); offset(r = c - w / 2) klemm_region2d(); }
+    difference() {
+        offset(r = c + w / 2) rund2d(k_round) klemm_region2d();
+        offset(r = c - w / 2) rund2d(k_round) klemm_region2d();
+    }
 }
 module klemmdeckel2d() { intersection() { outer2d(); translate([-t - 1, -t - 1]) square([iw + 2 * t + 2, y_split - 0.3 + t + 1]); } }
 module bodendeckel2d() {
@@ -119,11 +134,26 @@ module langloch2d(d, l) { hull() for (s = [-1, 1]) translate([s * l / 2, 0]) cir
 // Eckblock am hinteren Rand: von der Dichtflaeche bis cb_h, darueber 45-Grad-Fase zur Seitenwand
 // (Gehaeuse wird mit der Front aufs Bett gedruckt -> Fase ist die Unterseite, druckbar ohne Stuetzen)
 // Unten ohne Fase (dort sitzen die Kontermuttern der Kabelverschraubungen); 7 mm in der Ecke ueberbrueckt PETG problemlos
-module eckblock(x0, y0, wand_links, fase = true) {
-    z0 = tb;  z1 = tb + cb_h;
-    hull() {
-        translate([x0, y0, z0]) cube([cb, cb, z1 - z0]);
-        if (fase) translate([wand_links ? x0 : x0 + cb - 0.01, y0, z1 + cb]) cube([0.01, cb, 0.01]);
+// Eckbloecke am hinteren Rand: Grundriss = Block + Hohlkehlen, zur Oeffnung hin wie die Dichtbahn gerundet.
+// Oben (Richtung Front) 45-Grad-Fase zur Seitenwand (Druck: Front aufs Bett -> Fase ist die Unterseite).
+// Unten ohne Fase (dort sitzen die Kontermuttern der Kabelverschraubungen).
+module eckblock2d(links, unten) {
+    s = cb + g_fillet;
+    intersection() {
+        translate([links ? -0.5 : iw - s, unten ? -0.5 : ih - s]) square(s + 0.5);
+        difference() { translate([-1, -1]) square([iw + 2, ih + 2]); rund2d(g_round) seal_region2d(); }
+    }
+}
+module eckbloecke() {
+    s = cb + g_fillet;
+    for (links = [true, false], unten = [true, false]) {
+        translate([0, 0, tb]) linear_extrude(cb_h + 0.01) eckblock2d(links, unten);
+        // Fase: Grundriss zur Seitenwand hin auf null zusammenziehen (Ursprung in der Wand)
+        if (!unten) translate([0, 0, tb + cb_h]) {
+            if (links) translate([-0.5, 0, 0]) linear_extrude(s + 0.5, scale = [0.02, 1]) translate([0.5, 0]) eckblock2d(links, unten);
+            else translate([iw + 0.5, 0, 0]) mirror([1, 0, 0]) linear_extrude(s + 0.5, scale = [0.02, 1])
+                mirror([1, 0]) translate([-iw - 0.5, 0]) eckblock2d(links, unten);
+        }
     }
 }
 
@@ -140,12 +170,13 @@ module gehaeuse() {
                 outer2d();
                 translate([-t - 1, y_split]) square([iw + 2 * t + 2, ih + 2 * t]);
             }
-            for (x = [0, iw - cb], y = [0, ih - cb]) eckblock(x, y, x == 0, y > 0);
+            eckbloecke();
             // Quersteg und Schraubbloecke fuer den Klemmendeckel (wachsen beim Druck von der Front aus)
             translate([0, beam_y0, beam_z0]) cube([iw, beam_y1 - beam_y0, H - beam_z0]);
             // Schulter: Front und Quersteg sind sonst nur ueber eine Kante verbunden (Duennstelle)
             translate([0, beam_y0, shoulder_z0]) cube([iw, y_split + shoulder_w - beam_y0, H - shoulder_z0]);
-            for (x = [0, iw - kcb], y = [0, beam_y0 - kcb]) translate([x, y, kblk_z0]) cube([kcb, kcb, H - kblk_z0]);
+            // Schraubbloecke des Klemmendeckels, Oeffnungskante folgt der Dichtbahn
+            translate([0, 0, kblk_z0]) linear_extrude(H - kblk_z0) difference() { square([iw, beam_y0]); rund2d(k_round) klemm_region2d(); }
             // Dome fuer den PIR (M2) und den Tastenhalter (Einschmelzmutter M3)
             for (s = [-1, 1]) translate([pir_c[0] + s * pir_hole_dx, pir_c[1], H - pir_boss_h]) cylinder(d = 3.8, h = pir_boss_h + 0.01);   // D 3,8: frei neben der Linsenplatte
             translate([sw_c[0], sw_c[1], tube_z0]) cylinder(d = tube_od, h = H - tube_z0 + 0.01);   // Fuehrungsrohr fuer den Tastenstift
