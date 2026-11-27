@@ -47,7 +47,8 @@ in einem 3D-gedruckten, **spritzwassergeschützten Gehäuse**. Pro Board: 1 Bewe
 | 1 | L7805 (TO-220) | stehend |
 | 1 | IRLB8721PBF (TO-220) | Logic-Level-MOSFET, stehend |
 | 1 | 1N4007 | Verpolschutz |
-| 1 | 220 Ω, 1 | 10 kΩ | Widerstände 1/4 W |
+| 1 | Widerstand 220 Ω, 1/4 W | R1 |
+| 1 | Widerstand 10 kΩ, 1/4 W | R2 |
 | 1 | 1 µF Keramik, RM 2,5 | |
 | 1 | 10 µF / 16 V Elko, Ø 5 mm, **max. 6 mm hoch** (z. B. 5 × 5) | sitzt **unter** dem D1 mini |
 | 2 | Schraubklemme 2-polig, RM 5,08 | |
@@ -58,6 +59,7 @@ in einem 3D-gedruckten, **spritzwassergeschützten Gehäuse**. Pro Board: 1 Bewe
 | 3 | Zylinderschraube M3 × 6 | Platine |
 | 2 | Schneidschraube M2 × 6 (für Kunststoff) | PIR an die Front |
 | 2 | Kabelverschraubung M12 × 1,5 | Kabel 3–6,5 mm |
+| 2 | Schraube + Dübel, ca. 4 mm | Wandmontage durch die Langlöcher |
 
 ## Platine bestellen (JLCPCB)
 
